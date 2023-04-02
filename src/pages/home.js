@@ -33,34 +33,36 @@ export default (props)=>{
             setinpNAllow(true)
         }
     }
-    socket.on('joined', (roomid)=>{
-        props.gotUser(username)
-        props.setRoom(roomid)
-    })
-    socket.on('created', (roomid)=>{
-        if(textRef.current){
-            console.log(textRef.current)
-            textRef.current.innerHTML = "Created Room " + roomid;
-            textRef.current.style.display = "block";
-            setinpNAllow(false);
-        }
-    })
-    socket.on('dne', ()=>{
-        if(textRef.current){
-            console.log(textRef.current)
-            textRef.current.innerHTML = "Room Not Found";
-            textRef.current.style.display = "block";
-            setinpNAllow(false);
-        }
-    })
-    socket.on('roomExists', ()=>{
-        if(textRef.current){
-            console.log(textRef.current)
-            textRef.current.innerHTML = "Room Already Exists";
-            textRef.current.style.display = "block";
-            setinpNAllow(false);
-        }
-    })
+    useEffect(()=>{
+        socket.on('joined', (roomid)=>{
+            props.gotUser(username)
+            props.setRoom(roomid)
+        })
+        socket.on('created', (roomid)=>{
+            if(textRef.current){
+                console.log(textRef.current)
+                textRef.current.innerHTML = "Created Room " + roomid;
+                textRef.current.style.display = "block";
+                setinpNAllow(false);
+            }
+        })
+        socket.on('dne', ()=>{
+            if(textRef.current){
+                console.log(textRef.current)
+                textRef.current.innerHTML = "Room Not Found";
+                textRef.current.style.display = "block";
+                setinpNAllow(false);
+            }
+        })
+        socket.on('roomExists', ()=>{
+            if(textRef.current){
+                console.log(textRef.current)
+                textRef.current.innerHTML = "Room Already Exists";
+                textRef.current.style.display = "block";
+                setinpNAllow(false);
+            }
+        })
+    }, [])
     return(
       <div className="home">
         <div className='buttonHolder'>

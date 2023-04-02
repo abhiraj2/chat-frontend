@@ -36,13 +36,15 @@ export default (props)=>{
             .then(res=>{console.log(res); setMessages(res.messages.slice())})
     }
 
-    socket.on('newMsg', fetchMessages);
-    socket.on('newUser', fetchUser);
-    socket.on('userLeft', fetchUser);
+    useEffect(()=>{
+        socket.on('newMsg', fetchMessages);
+        socket.on('newUser', fetchUser);
+        socket.on('userLeft', fetchUser);
 
-    socket.on('received', ()=>{
-        setRec(true);
-    })
+        socket.on('received', ()=>{
+            setRec(true);
+        })  
+    },[])
     
     useEffect(fetchUser,[])
     useEffect(fetchMessages,[])
