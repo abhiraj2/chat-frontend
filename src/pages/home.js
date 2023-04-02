@@ -34,9 +34,12 @@ export default (props)=>{
         }
     }
     useEffect(()=>{
-        socket.on('joined', (roomid)=>{
-            props.gotUser(username)
-            props.setRoom(roomid)
+        socket.on('joined', (roomid, user)=>{
+            console.log("hello")
+            props.setAppState({
+                roomid: roomid,
+                username: user
+            })
         })
         socket.on('created', (roomid)=>{
             if(textRef.current){

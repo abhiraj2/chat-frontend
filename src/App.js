@@ -17,17 +17,19 @@ const socket = io("https://chat-backend-w1tg.onrender.com/");
 // // })
 // socket.emit("create", "testRoom1");
 function App() {
-  const [room, setRoom] = useState(null); 
-  const [username, setUsername] = useState(null);
-  let gotUser = (user) => {
-    setUsername(user);
-  }
+  const [appState, setAppState] = useState({
+    roomid: null,
+    username: null
+  })
+  // let gotUser = (user) => {
+  //   setUsername(user);
+  // }
   return (
     <div>
       <Router>
         <Routes>
-          <Route path='/room/:roomid' element={(room)?(<Room username={username} socket={socket}/>):(<Navigate to={'/'}></Navigate>)}></Route>
-          <Route path='/' element={(room)?(<Navigate to={'/room/'+room}></Navigate>):(<Home gotUser={gotUser} socket={socket} setRoom={setRoom}/>)} />
+          <Route path='/room/:roomid' element={(appState.roomid)?(<Room username={appState.username} socket={socket}/>):(<Navigate to={'/'}></Navigate>)}></Route>
+          <Route path='/' element={(appState.roomid)?(<Navigate to={'/room/'+appState.roomid}></Navigate>):(<Home socket={socket} setAppState={setAppState}/>)} />
         </Routes>
       </Router>
     </div>
