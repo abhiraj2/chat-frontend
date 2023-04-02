@@ -10,7 +10,8 @@ import {
   Navigate
 } from "react-router-dom"
 
-const socket = io("https://chat-backend-w1tg.onrender.com/");
+//const socket = io("https://chat-backend-w1tg.onrender.com/");
+const socket = io("http://localhost:8000")
 // // socket.on("connect", ()=>{
 // //   console.log("Connection Established",);
 // // })

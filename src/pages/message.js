@@ -7,7 +7,7 @@ export default (props) => {
     const timestamp = props.timestamp;
     return(
         <div className="message">
-            <TextField fullWidth InputProps={{readOnly:true}} variant="outlined" label={username} value={message}></TextField>
+            <TextField fullWidth InputProps={{readOnly:true}} variant="outlined" label={username} value={(message!='')?message:' '}></TextField>
         </div>
     )   
 }

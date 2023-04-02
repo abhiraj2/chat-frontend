@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {TextField} from '@mui/material'
 import { ArrowCircleRight } from '@mui/icons-material'
 import MessageHolder from "./message"
@@ -7,13 +7,15 @@ import "./room.css"
 import { Message } from './constructors'
 import { useParams } from "react-router-dom";
 
-const serverURL = 'https://chat-backend-w1tg.onrender.com/'
-// const socket = io("http://localhost:8000");
+//const serverURL = 'https://chat-backend-w1tg.onrender.com/'
+const serverURL = "http://localhost:8000/";
 
 export default (props)=>{
     const [messages, setMessages] = useState([]);
     const [users, setUsers] = useState([])
     const [message, setMessage] = useState('')
+    const [rec, setRec] = useState(true);
+    const sendButt = useRef(null)
     const socket = props.socket
     let {roomid} = useParams()
 
@@ -37,11 +39,20 @@ export default (props)=>{
     socket.on('newMsg', fetchMessages);
     socket.on('newUser', fetchUser);
     socket.on('userLeft', fetchUser);
+
+    socket.on('received', ()=>{
+        setRec(true);
+    })
+    
     useEffect(fetchUser,[])
     useEffect(fetchMessages,[])
     const handleSend = (ev) => {
-        let msg = new Message(props.username, message, roomid, new Date());
-        socket.emit("sendMsg", msg);
+        {
+            let msg = new Message(props.username, message, roomid, new Date());
+            socket.emit("sendMsg", msg);
+            setMessage('')
+        }
+        
     }
 
     return(
@@ -56,8 +67,19 @@ export default (props)=>{
                         {messages.map((ele, idx)=><MessageHolder key={idx} username={ele.username} message={ele.message} timestamp={ele.timestamp}></MessageHolder>)}
                     </div>
                     <div className='messageBox' style={{width:"100%"}}>
-                        <TextField onChange={(ev => setMessage(ev.target.value))} value={message} variant='filled' label={"Message"} sx={{width:"70%"}}> </TextField>
-                        <ArrowCircleRight id = 'sendButton' sx={{fontSize:"3.5em", color:"#686de0"}} onClick={handleSend}></ArrowCircleRight>
+                        <TextField onKeyPress={(ev)=>{
+                            if(ev.key == 'Enter'){   
+                                sendButt.current.dispatchEvent(
+                                    new MouseEvent('click', {
+                                      view: window,
+                                      bubbles: true,
+                                      cancelable: true,
+                                      buttons: 1,
+                                    }),
+                                );
+                            }
+                        }} onChange={(ev => setMessage(ev.target.value))} value={message} variant='filled' label={"Message"} sx={{width:"70%"}}> </TextField>
+                        <ArrowCircleRight ref={sendButt} id = 'sendButton' sx={{fontSize:"3.5em", color:"#686de0"}} onClick={(rec)?handleSend:()=>{console.log("Disabled")}}></ArrowCircleRight>
                     </div>
                 </div>
             </div>

@@ -53,6 +53,14 @@ export default (props)=>{
             setinpNAllow(false);
         }
     })
+    socket.on('roomExists', ()=>{
+        if(textRef.current){
+            console.log(textRef.current)
+            textRef.current.innerHTML = "Room Already Exists";
+            textRef.current.style.display = "block";
+            setinpNAllow(false);
+        }
+    })
     return(
       <div className="home">
         <div className='buttonHolder'>
