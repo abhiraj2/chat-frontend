@@ -7,8 +7,8 @@ import "./room.css"
 import { Message } from './constructors'
 import { useParams } from "react-router-dom";
 
-//const serverURL = 'https://chat-backend-w1tg.onrender.com/'
-const serverURL = "http://localhost:8000/";
+const serverURL = 'https://chat-backend-w1tg.onrender.com/'
+// const serverURL = "http://localhost:8000/";
 
 export default (props)=>{
     const [messages, setMessages] = useState([]);
