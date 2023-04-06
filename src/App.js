@@ -28,7 +28,7 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path='/room/:roomid' element={(appState.roomid)?(<Room username={appState.username} socket={socket}/>):(<Navigate to={'/'}></Navigate>)}></Route>
+          <Route path='/room/:roomid' element={(appState.roomid)?(<Room setAppState={setAppState} username={appState.username} socket={socket}/>):(<Navigate to={'/'}></Navigate>)}></Route>
           <Route path='/' element={(appState.roomid)?(<Navigate to={'/room/'+appState.roomid}></Navigate>):(<Home socket={socket} setAppState={setAppState}/>)} />
         </Routes>
       </Router>

@@ -21,7 +21,7 @@ export default (props)=>{
     const user = new User(username, roomID);
     
     let handleClick = (create, roomid) =>{
-        if(roomID == ''){
+        if(roomID == '' || username == ''){
             setError(true);
         }
         else if(create){
@@ -34,6 +34,10 @@ export default (props)=>{
         }
     }
     useEffect(()=>{
+        props.setAppState({
+            roomid: null,
+            username: null
+        })
         socket.on('joined', (roomid, user)=>{
             console.log("hello")
             props.setAppState({

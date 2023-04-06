@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {TextField} from '@mui/material'
-import { ArrowCircleRight } from '@mui/icons-material'
+import { ArrowCircleRight, Cancel} from '@mui/icons-material'
 import MessageHolder from "./message"
 import "./room.css"
+import {Link} from "react-router-dom" 
 //import { io } from 'socket.io-client'
 import { Message } from './constructors'
 import { useParams } from "react-router-dom";
@@ -18,6 +19,13 @@ export default (props)=>{
     const sendButt = useRef(null)
     const socket = props.socket
     let {roomid} = useParams()
+
+    const handleLeave = () =>{
+        props.setAppState({
+            roomid: null,
+            username: null
+        })
+    }
 
     const fetchUser = ()=>{
         fetch(serverURL + 'getUser/' + roomid)
@@ -44,15 +52,24 @@ export default (props)=>{
         socket.on('received', ()=>{
             setRec(true);
         })  
+        socket.on('disconnect', (reason)=>{
+            if(reason == "transport close" || reason == "ping timeout"){
+                console.log(reason)
+                console.log("Retrying Join")
+                socket.emit('join', roomid, {username: props.username});
+            }
+        })
     },[])
     
     useEffect(fetchUser,[])
     useEffect(fetchMessages,[])
     const handleSend = (ev) => {
         {
-            let msg = new Message(props.username, message, roomid, new Date());
-            socket.emit("sendMsg", msg);
-            setMessage('')
+            if(message){
+                let msg = new Message(props.username, message, roomid, new Date());
+                socket.emit("sendMsg", msg);
+                setMessage('')
+            } 
         }
         
     }
@@ -60,10 +77,13 @@ export default (props)=>{
     return(
         <div className='room'>
             <div className='infoArea' style={{textAlign: "left", backgroundColor: "#7ed6df"}}>
-                <div id='infoText'>User List</div>
-                <div className='userList'>{users.map((ele, idx)=><div style={{width:"50%"}} key={ele}>{ele}</div>)}</div>
+                <div>
+                    <div id='infoText'>User List</div>
+                    <div className='userList'>{users.map((ele, idx)=><div style={{width:"50%"}} key={ele}>{ele}</div>)}</div>
+                </div>
+                <Cancel onClick={handleLeave} sx={{ cursor: "pointer",fontSize:"2.5em"}}></Cancel>
             </div>
-            <div className='chatArea' style={{backgroundColor: "#c7ecee"}}>
+            <div className='chatArea' style={{backgroundColor: "#fff"}}>
                 <div className='messageGroup' style={{width:"100%", marginBottom:"20px"}}>
                     <div className='messagesArea'>
                         {messages.map((ele, idx)=><MessageHolder key={idx} username={ele.username} message={ele.message} timestamp={ele.timestamp}></MessageHolder>)}
