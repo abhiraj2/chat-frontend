@@ -18,9 +18,10 @@ export default (props)=>{
     const [rec, setRec] = useState(true);
     const sendButt = useRef(null)
     const socket = props.socket
-    let {roomid} = useParams()
+    let {roomid} = useParams()  
 
     const handleLeave = () =>{
+        socket.emit("userLeftRoom", roomid, props.username);
         props.setAppState({
             roomid: null,
             username: null

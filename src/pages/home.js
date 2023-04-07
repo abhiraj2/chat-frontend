@@ -2,13 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {Button, TextField} from "@mui/material"
 //import { io } from "socket.io-client";
 import "./home.css"
-//import { create } from "@mui/material/styles/createTransitions";
 import {User} from "./constructors"
-// function Message(user, msgid, msg){
-//     this.msgid = msgid;
-//     this.msg = msg;
-//     this.ack = false;
-// }
 
 
 export default (props)=>{
